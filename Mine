@@ -1,0 +1,50 @@
+-- DELTA SPEED SCRIPT - FAST & NO GLITCH
+local LP = game.Players.LocalPlayer
+local speedOn = false
+local speedValue = 200
+
+-- Simple GUI
+local ScreenGui = Instance.new("ScreenGui")
+local Btn = Instance.new("TextButton")
+ScreenGui.Parent = LP:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+Btn.Parent = ScreenGui
+Btn.Size = UDim2.new(0, 70, 0, 70)
+Btn.Position = UDim2.new(0, 10, 0, 200)
+Btn.Text = "⚡"
+Btn.Font = Enum.Font.GothamBold
+Btn.TextSize = 35
+Btn.BackgroundColor3 = Color3.fromRGB(255,0,0)
+Btn.TextColor3 = Color3.fromRGB(255,255,255)
+Btn.Draggable = true
+
+-- Toggle
+Btn.MouseButton1Click:Connect(function()
+    speedOn = not speedOn
+    local hum = LP.Character:FindFirstChildOfClass("Humanoid")
+    if hum then
+        hum.WalkSpeed = speedOn and speedValue or 16
+        hum.JumpPower = speedOn and 80 or 50
+        Btn.BackgroundColor3 = speedOn and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,0,0)
+    end
+end)
+
+-- Anti-glitch loop
+spawn(function()
+    while wait(0.05) do
+        if speedOn then
+            local hum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+            if hum then hum.WalkSpeed = speedValue end
+        end
+    end
+end)
+
+-- Respawn support
+LP.CharacterAdded:Connect(function(char)
+    wait(0.5)
+    if speedOn then
+        local hum = char:WaitForChild("Humanoid")
+        hum.WalkSpeed = speedValue
+        hum.JumpPower = 80
+    end
+end)
